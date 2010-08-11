@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.juicekit.ui</groupId>
+    <artifactId>juicekit-flex-data</artifactId>
+    <version>1.0</version>
+    <packaging>swc</packaging>
+    <name>JuiceKit Flex Client-Side Data Processing Library</name>
+
+    <properties>
+        <flex.sdk.version>4.1.0.16076</flex.sdk.version>
+        <flex.sdk.textLayout.version>1.1.0.604</flex.sdk.textLayout.version>
+        <flex.pmd.version>1.1</flex.pmd.version>
+        <flex-mojos.version>3.7.1</flex-mojos.version>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>no-test</id>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+    </profiles>
+
+
+
+    <build>
+        <sourceDirectory>src/main/flex</sourceDirectory>
+        <testSourceDirectory>src/test/flex</testSourceDirectory>
+        <finalName>juicekit-flex-data</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.flexmojos</groupId>
+                <artifactId>flexmojos-maven-plugin</artifactId>
+                <version>${flex-mojos.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <storepass>true</storepass>
+                    <configurationReport>true</configurationReport>
+                    <sourceFile>${project.build.finalName}.mxml</sourceFile>
+                    <locales>
+                        <locale>en_US</locale>
+                    </locales>
+                    <headlessServer>true</headlessServer>
+                    <!-- Use Adobe-signed framework Runtime Shared Libraries (RSLs). -->
+                    <policyFileUrls>
+                        <url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</url>
+                    </policyFileUrls>
+                    <rslUrls>
+                        <url>
+                            http://fpdownload.adobe.com/pub/{extension}/flex/${flex.sdk.version}/{artifactId}_{version}.{extension}
+                        </url>
+                    </rslUrls>
+                    <flashPlayerCommand>/Applications/Flash Player.app/Contents/MacOS/Flash Player</flashPlayerCommand>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.adobe.flex</groupId>
+                        <artifactId>compiler</artifactId>
+                        <version>${flex.sdk.version}</version>
+                        <type>pom</type>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <dependencies>
+        <!-- Dynamically load the Adobe signed RSL framework instead of merging into SWF. -->
+        <dependency>
+            <groupId>com.adobe.flex.framework</groupId>
+            <artifactId>textLayout</artifactId>
+            <version>${flex.sdk.textLayout.version}</version>
+            <type>swc</type>
+            <scope>caching</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.flex.framework</groupId>
+            <artifactId>framework</artifactId>
+            <version>${flex.sdk.version}</version>
+            <type>swc</type>
+            <scope>caching</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.flex.framework</groupId>
+            <artifactId>spark</artifactId>
+            <version>${flex.sdk.version}</version>
+            <type>swc</type>
+            <scope>caching</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.flex.framework</groupId>
+            <artifactId>sparkskins</artifactId>
+            <version>${flex.sdk.version}</version>
+            <type>swc</type>
+            <scope>caching</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.flex.framework</groupId>
+            <artifactId>rpc</artifactId>
+            <version>${flex.sdk.version}</version>
+            <type>swc</type>
+            <scope>caching</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.flex.framework</groupId>
+            <artifactId>datavisualization</artifactId>
+            <version>${flex.sdk.version}</version>
+            <type>swc</type>
+            <scope>caching</scope>
+        </dependency>
+        <!-- Flex framework resource bundles -->
+        <dependency>
+            <groupId>com.adobe.flex.framework</groupId>
+            <artifactId>flex-framework</artifactId>
+            <version>${flex.sdk.version}</version>
+            <type>pom</type>
+        </dependency>
+        <!-- Include unit test dependencies. -->
+        <dependency>
+            <groupId>com.adobe.flexunit</groupId>
+            <artifactId>flexunit</artifactId>
+            <version>4.0-rc-1</version>
+            <type>swc</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.juicekit.ui</groupId>
+            <artifactId>juicekit-flex-core</artifactId>
+            <version>1.0</version>
+            <type>swc</type>
+        </dependency>
+    </dependencies>
+
+</project>

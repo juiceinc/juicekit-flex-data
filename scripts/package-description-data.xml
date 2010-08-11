@@ -1,0 +1,28 @@
+<overviews>
+	<packages>
+		<package name="org.juicekit.animate">
+			<shortDescription>
+			<![CDATA[
+The org.juicekit.animate package contains Transition classes that 
+			]]>
+			</shortDescription>
+			<description>
+			<![CDATA[
+The org.juicekit.animate package contains Transitioners and Tweens.
+			]]>
+			</description>
+		</package>
+		<package name="org.juicekit.animate.interpolate">
+			<shortDescription>
+			<![CDATA[
+The org.juicekit.animate.interpolate package provides interpolators for many common objects
+			]]>
+			</shortDescription>
+			<description>
+			<![CDATA[
+The org.juicekit.animate.interpolate package provides interpolators for many common objects
+			]]>
+			</description>
+		</package>
+	</packages>
+</overviews>

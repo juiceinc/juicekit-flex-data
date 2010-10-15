@@ -4,7 +4,7 @@
 
   <groupId>com.juicekit.ui</groupId>
   <artifactId>juicekit-flex-data</artifactId>
-  <version>2.0</version>
+  <version>2.0.1-SNAPSHOT</version>
   <packaging>swc</packaging>
   <name>JuiceKit Flex Client-Side Data Processing Library</name>
 

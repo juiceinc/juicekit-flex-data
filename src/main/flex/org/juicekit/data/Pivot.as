@@ -63,7 +63,7 @@ package org.juicekit.data {
 	 *
 	 */
 	[Bindable]
-	public class Pivot extends DataBase {
+	public class Pivot extends DataProcessingBase {
 		
 		/**
 		 * The delimiter between pivot items

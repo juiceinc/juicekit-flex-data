@@ -37,7 +37,7 @@ package org.juicekit.data {
 	 * continuously updated if the source data changes.    
 	 *
 	 */
-	public class LiveQuery extends DataBase {
+	public class LiveQuery extends DataProcessingBase {
 		
 		/**
 		 * Perform the query calculation

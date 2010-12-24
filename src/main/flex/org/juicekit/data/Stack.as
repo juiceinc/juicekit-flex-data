@@ -67,7 +67,7 @@ package org.juicekit.data {
 	 *
 	 */
 	[Bindable]
-	public class Stack extends DataBase {
+	public class Stack extends DataProcessingBase {
 		
 		
 		private function stringFromProps(propArr:Array, o:Object):String {

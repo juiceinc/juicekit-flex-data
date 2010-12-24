@@ -28,7 +28,7 @@ package org.juicekit.data {
 	 * @author Chris Gemignani
 	 */
 	[Bindable]
-	public class Flatten extends DataBase {
+	public class Flatten extends DataProcessingBase {
 		
 		
 		/**

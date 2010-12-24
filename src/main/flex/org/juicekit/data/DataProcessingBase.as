@@ -12,7 +12,7 @@ package org.juicekit.data {
 	import mx.managers.SystemManager;
 	import mx.utils.NameUtil;
 	
-	import org.juicekit.collections.StatsArrayCollection;
+	import org.juicekit.collections.DataArrayCollection;
 	
 	import spark.components.Application;
 	
@@ -29,7 +29,7 @@ package org.juicekit.data {
 	 * A base class for JuiceKit client side data processing.
 	 */
 	[Bindable]
-	public class DataBase extends DeferredProcessingBase {
+	public class DataProcessingBase extends DeferredProcessingBase {
 		
 		public static const COMPLETE:String = 'complete';
 		
@@ -178,12 +178,12 @@ package org.juicekit.data {
 		 * <p><code>result</code> is bindable.</p>
 		 */
 		[Bindable(event='dataRecalc')] 
-		public function get result():StatsArrayCollection {
+		public function get result():DataArrayCollection {
 			resultFetches += 1;
 			return _result;
 		}
 		
-		private var _result:StatsArrayCollection = new StatsArrayCollection();
+		private var _result:DataArrayCollection = new DataArrayCollection();
 		
 		
 		/**
@@ -222,7 +222,7 @@ package org.juicekit.data {
 		/**
 		 * Constructor
 		 */		
-		public function DataBase() {
+		public function DataProcessingBase() {
 			//throw new Error("This is an abstract class.");
 		}
 	}

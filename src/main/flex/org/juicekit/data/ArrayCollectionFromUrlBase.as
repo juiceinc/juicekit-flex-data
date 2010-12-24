@@ -29,6 +29,7 @@ import mx.rpc.events.ResultEvent;
 import mx.rpc.http.HTTPService;
 import mx.utils.NameUtil;
 
+import org.juicekit.collections.DataArrayCollection;
 import org.juicekit.util.Strings;
 
 /**
@@ -342,7 +343,7 @@ public class ArrayCollectionFromUrlBase extends EventDispatcher implements IMXML
    * An ArrayCollection containing the result.
    */
   [Bindable(event='acRecalc')]
-  public function get result():ArrayCollection {
+  public function get result():DataArrayCollection {
     resultFetches += 1;
     if (dirty) {
       if (url != null) {
@@ -368,7 +369,7 @@ public class ArrayCollectionFromUrlBase extends EventDispatcher implements IMXML
     return _result;
   }
 
-  private var _result:ArrayCollection = new ArrayCollection([]);
+  private var _result:DataArrayCollection = new DataArrayCollection([]);
 
 
 

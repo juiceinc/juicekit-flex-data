@@ -35,6 +35,8 @@ package org.juicekit.query
     import mx.utils.ObjectUtil;
     
     import org.juicekit.data.DeferredProcessingBase;
+    import org.juicekit.data.model.DataField;
+    import org.juicekit.data.model.DataSchema;
     import org.juicekit.query.*;
     import org.juicekit.util.Filter;
     import org.juicekit.util.Property;
@@ -257,9 +259,6 @@ package org.juicekit.query
         }
         
         
-        /**
-         * ChrisG: Remove groupby from sort
-         */
         protected function sorter():Sort
         {
             var s:Array = [], i:int;
@@ -348,6 +347,8 @@ package org.juicekit.query
             } else {
                 results = aggregate(results);
             }
+            
+            
             
             // ChrisG: Move the sort to the last action
             // sort the result set
@@ -570,11 +571,37 @@ package org.juicekit.query
             return true;
         }
         
+        public function get dataSchema():DataSchema
+        {
+            // Calculate dataSchema
+            var schema:DataSchema = new DataSchema();
+            for each (var o:Object in _select) {
+                var df:DataField = (o.expression as Expression).dataField.clone();
+                df.name = o.name;
+                df.expression = new Variable(df.name);
+                df.description = df.description;
+
+                schema.addField(df);
+            }
+            for each (var grp:String in _groupby) {
+                df = schema.getFieldByName(grp);
+                if (df) {
+                    df.isDimension = true;
+                    df.isMetric = false;
+                }
+            }
+
+            return schema;
+        }
+        
     } // end of class Query
 }
 import mx.utils.ObjectUtil;
 
 
+/**
+ * Helper class for doing aggregations.
+ */
 class AggrItem {
     
     public var aggrs:Array;

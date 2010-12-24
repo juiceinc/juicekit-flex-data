@@ -32,6 +32,7 @@
 
 package org.juicekit.query
 {
+  import org.juicekit.data.model.DataField;
   import org.juicekit.util.Property;
 
 /**
@@ -50,8 +51,25 @@ public class Variable extends Expression
   }
 
   public function set name(f:String):void {
-    _prop = Property.$(f);
+      if (f is String) {
+          _prop = Property.$(f);
+          dataField = new DataField(f, -1);
+      } else if (f is DataField) {
+          dataField = f as DataField;
+          _prop = Property.$(dataField.name);
+      }
   }
+  
+  
+//  override public function get dataField():DataField 
+//  {
+//      if (!_dataField) {
+//          var field:DataField = new DataField(
+//          _dataField = _expr.dataField.clone();
+//      } 
+//      return _dataField;
+//  }
+  
 
   /**
    * Creates a new Variable operator.

@@ -32,6 +32,9 @@
 
 package org.juicekit.query
 {
+    import org.juicekit.data.model.DataField;
+    import org.juicekit.util.DataUtil;
+
 /**
  * Expression operator for a literal value.
  */
@@ -42,6 +45,12 @@ public class Literal extends Expression
   /** The boolean false literal. */
   public static const FALSE:Literal = new Literal(false);
 
+  override public function get dataField():DataField {
+      var nm:String = value.toString();
+      var typ:int = DataUtil.type(value.toString());
+      return new DataField(nm, typ);
+  };
+  
   private var _value:Object = null;
 
   /** The literal value of this expression. */

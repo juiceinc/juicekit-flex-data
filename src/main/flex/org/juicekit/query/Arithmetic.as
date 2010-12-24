@@ -32,6 +32,7 @@
 
 package org.juicekit.query
 {
+import org.juicekit.data.model.DataField;
 import org.juicekit.query.*;
 
 /**
@@ -50,6 +51,17 @@ public class Arithmetic extends BinaryExpression
   public static const DIV:int = 3;
   /** Indicates a modulo operation. */
   public static const MOD:int = 4;
+  
+  
+  override public function get dataField():DataField 
+  {
+      if (!_dataField) {
+          _dataField = _left.dataField.clone();
+      } 
+      return _dataField;
+  }
+  
+  
 
   /** Returns a string representation of the arithmetic operator. */
   public override function get operatorString():String

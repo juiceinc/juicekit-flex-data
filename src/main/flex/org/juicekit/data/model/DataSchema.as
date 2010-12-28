@@ -103,17 +103,17 @@ package org.juicekit.data.model
         
         /**
          * Retrieves a data field by name.
-         * @param name the data field name
+         * @param name the data field name @param useRawNameLookup use rawNameLookup in addition to nameLookup
          * @return the corresponding data field, or null if no data field is
          *  found matching the name
          */
-        public function getFieldByName(name:String):DataField
+        public function getFieldByName(name:String, useRawNameLookup:Boolean=true):DataField
         {
             if (_nameLookup.hasOwnProperty(name)) 
             {
                 return _nameLookup[name];
             }
-            else if (!_rawNameLookup.hasOwnProperty(name)) 
+            else if (useRawNameLookup && !_rawNameLookup.hasOwnProperty(name)) 
             {
                 _rawNameLookup[name] = new DataField(name, DataUtil.UNKNOWN);
             } 
@@ -157,6 +157,7 @@ package org.juicekit.data.model
             if (showFormats) 
                 return getFormattedFieldValue(name, o);
             else 
+                var fld:DataField = getFieldByName(name) 
                 return getFieldByName(name).expression.eval(o);
         }
         
@@ -231,7 +232,7 @@ package org.juicekit.data.model
             var idx:int;
             for each (var fld:DataField in this) {                
                 if (fld.isMetric) {
-                    if (!_metrics.getFieldByName(fld.name)) {                        
+                    if (!_metrics.getFieldByName(fld.name, false)) {                        
                         _metrics.addField(fld);
                     }
                 }
@@ -249,7 +250,7 @@ package org.juicekit.data.model
             }
             return _metrics;
         }
-        
+    
         
         [Bindable(event="collectionChange")]
         public function get dimensions():DataSchema {
@@ -257,7 +258,7 @@ package org.juicekit.data.model
             var idx:int;
             for each (var fld:DataField in this) {                
                 if (fld.isDimension) {
-                    if (!_dimensions.getFieldByName(fld.name)) {                        
+                    if (!_dimensions.getFieldByName(fld.name, false)) {                        
                         _dimensions.addField(fld);
                     }
                 }

@@ -13,7 +13,11 @@ package org.juicekit.data.model
     public class DataItem extends Proxy {
         protected var schema:DataSchema;
         
-        private var _object:Object;
+        /**
+         * The original object used to create the DataItem.
+         */
+        public var _object:Object;
+        
         
         public function setSchema(s:DataSchema):void {
             schema = s;

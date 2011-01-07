@@ -41,7 +41,7 @@ package org.juicekit.util
     public class DataUtil
     {
         /** Constant indicating an unknown data type. */
-        public static const UNKNOWN = -1;
+        public static const UNKNOWN:int = -1;
         /** Constant indicating a numeric data type. */
         public static const NUMBER:int = 0;
         /** Constant indicating an integer data type. */

@@ -33,6 +33,10 @@
 package org.juicekit.data.model
 {
     import flash.events.Event;
+    import flash.events.EventDispatcher;
+    
+    import mx.events.PropertyChangeEvent;
+    import mx.events.PropertyChangeEventKind;
     
     import org.juicekit.query.Expression;
     import org.juicekit.query.methods.sum;
@@ -44,7 +48,7 @@ package org.juicekit.data.model
      * A data field stores metadata for an individual data variable.
      */
     [Bindable]
-    public class DataField
+    public class DataField extends EventDispatcher
     {
         
         //-------------------------------------------
@@ -62,8 +66,9 @@ package org.juicekit.data.model
         
         public function set id(v:String):void {
             if (v != _id) {
+                var oldValue:* = _id;
                 _id = v;
-                dataFieldChanged();
+                dataFieldChanged('id', oldValue, v);
             }
         }
         
@@ -86,8 +91,9 @@ package org.juicekit.data.model
         
         public function set name(v:String):void {
             if (v != _name) {
+                var oldValue:* = _name;
                 _name = v;
-                dataFieldChanged();
+                dataFieldChanged('name', oldValue, v);
             }
         }
         
@@ -107,8 +113,9 @@ package org.juicekit.data.model
         
         public function set rawField(v:String):void {
             if (v != _rawField) {
+                var oldValue:* = _rawField;
                 _rawField = v;
-                dataFieldChanged();
+                dataFieldChanged('rawField', oldValue, v);
             }
         }
         
@@ -130,8 +137,9 @@ package org.juicekit.data.model
         
         public function set type(v:int):void {
             if (v != _type) {
+                var oldValue:* = _type;
                 _type = v;
-                dataFieldChanged();
+                dataFieldChanged('type', oldValue, v);
             }
         }
         
@@ -151,8 +159,9 @@ package org.juicekit.data.model
         
         public function set format(v:String):void {
             if (v != _format) {
+                var oldValue:* = _format;
                 _format = v;
-                dataFieldChanged();
+                dataFieldChanged('format', oldValue, v);
             }
         }
         
@@ -176,8 +185,9 @@ package org.juicekit.data.model
         
         public function set detailFormat(v:String):void {
             if (v != _detailFormat) {
+                var oldValue:* = _detailFormat;
                 _detailFormat = v;
-                dataFieldChanged();
+                dataFieldChanged('detailFormat', oldValue, v);
             }
         }
         
@@ -201,8 +211,9 @@ package org.juicekit.data.model
         
         public function set label(v:String):void {
             if (v != _label) {
+                var oldValue:* = _label;
                 _label = v;
-                dataFieldChanged();
+                dataFieldChanged('label', oldValue, v);
             }
         }
         
@@ -222,8 +233,9 @@ package org.juicekit.data.model
         
         public function set description(v:String):void {
             if (v != _description) {
+                var oldValue:* = _description;
                 _description = v;
-                dataFieldChanged();
+                dataFieldChanged('description', oldValue, v);
             }
         }
         
@@ -240,8 +252,9 @@ package org.juicekit.data.model
         
         public function set defaultValue(v:Object):void {
             if (v != _defaultValue) {
+                var oldValue:* = _defaultValue;
                 _defaultValue = v;
-                dataFieldChanged();
+                dataFieldChanged('defaultValue', oldValue, v);
             }
         }
         
@@ -262,14 +275,15 @@ package org.juicekit.data.model
         protected var _expression:Expression;
         
         public function set expression(v:*):void {
+            var oldValue:* = _expression;
             if (v is Expression) {
-                _expression = v;
+                _expression = v;                
             } else if (v is String) {
                 _expression = Expression.expr(v);
             } else {
                 _expression = null;
             }
-            dataFieldChanged();
+            dataFieldChanged('expression', oldValue, _expression);
         }
         
         [Bindable(event="dataFieldChanged")]
@@ -291,6 +305,7 @@ package org.juicekit.data.model
         protected var _aggregationExpression:Expression;
         
         public function set aggregationExpression(v:*):void {
+            var oldValue:* = _expression;
             if (v is Expression) {
                 _aggregationExpression = v;
             } else if (v is String) {
@@ -298,7 +313,7 @@ package org.juicekit.data.model
             } else {
                 _aggregationExpression = null;
             }
-            dataFieldChanged();
+            dataFieldChanged('aggregationExpression', oldValue, _aggregationExpression);
         }
         
         [Bindable(event="dataFieldChanged")]
@@ -320,8 +335,9 @@ package org.juicekit.data.model
         
         public function set isMetric(v:Object):void {
             if (v != _isMetric) {
+                var oldValue:* = _isMetric;
                 _isMetric = v;
-                dataFieldChanged();
+                dataFieldChanged('isMetric', oldValue, v);
             }
         }
         
@@ -344,8 +360,9 @@ package org.juicekit.data.model
         
         public function set isAdditive(v:Object):void {
             if (v != _isAdditive) {
+                var oldValue:* = _isAdditive;
                 _isAdditive = v;
-                dataFieldChanged();
+                dataFieldChanged('isAdditive', oldValue, v);
             }
         }
         
@@ -367,8 +384,9 @@ package org.juicekit.data.model
         
         public function set isDimension(v:Object):void {
             if (v != _isDimension) {
+                var oldValue:* = _isDimension;
                 _isDimension = v;
-                dataFieldChanged();
+                dataFieldChanged('isDimension', oldValue, v);
             }
         }
         
@@ -417,8 +435,9 @@ package org.juicekit.data.model
         /**
          * Notification that DataField properties have changed.
          */
-        private function dataFieldChanged():void {
+        private function dataFieldChanged(prop:String, oldValue:*, newValue:*):void {
             dispatchEvent(new Event('dataFieldChanged'));
+            dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, prop, oldValue, newValue)); 
         }
         
         

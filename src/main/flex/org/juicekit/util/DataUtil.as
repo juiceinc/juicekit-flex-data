@@ -167,6 +167,8 @@ package org.juicekit.util
                     new DataField(header[col],
                         types[col] == -1 ? DataUtil.STRING : types[col]));
             }
+            
+            Sort.sortArrayCollectionBy(schema, ['isMetric', 'name']);
             return schema;
         }
         

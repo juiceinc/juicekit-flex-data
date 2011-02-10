@@ -44,7 +44,7 @@ package org.juicekit.data.model
          */
         override flash_proxy function getProperty(name:*):* {
             if (schema == null) {
-                return _object[name]
+                return _object[name];
             } else {
                 var nm:String;
                 if (name is String) {

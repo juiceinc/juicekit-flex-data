@@ -18,7 +18,9 @@ package org.juicekit.collections
     import org.juicekit.query.methods.*;
     import org.juicekit.util.DataUtil;
     
+    /*
     import spark.components.DataGrid;
+    */
     
     /**
      * An array collection 

@@ -42,7 +42,9 @@ package org.juicekit.data.model
     import org.juicekit.util.Arrays;
     import org.juicekit.util.DataUtil;
     
+    /*
     import spark.components.gridClasses.GridColumn;
+    */
     
     
     /**
@@ -157,7 +159,7 @@ package org.juicekit.data.model
             if (showFormats) 
                 return getFormattedFieldValue(name, o);
             else 
-                var fld:DataField = getFieldByName(name) 
+                var fld:DataField = getFieldByName(name); 
                 return getFieldByName(name).expression.eval(o);
         }
         
@@ -187,6 +189,7 @@ package org.juicekit.data.model
         }
         
         
+        
         [Bindable(event="collectionChange")]
         public function get dataGridColumns():Array {
             var columns:Array = [];
@@ -198,6 +201,7 @@ package org.juicekit.data.model
             return columns;
         }
         
+        /*
         [Bindable(event="collectionChange")]
         public function get sparkFormattedDataGridColumns():IList {
             var columns:ArrayList = new ArrayList();
@@ -222,7 +226,7 @@ package org.juicekit.data.model
             }
             return columns;
         }
-        
+*/        
         private var _metrics:DataSchema;
         private var _dimensions:DataSchema;
         

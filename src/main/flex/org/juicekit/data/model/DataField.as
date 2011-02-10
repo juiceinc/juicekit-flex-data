@@ -151,9 +151,10 @@ package org.juicekit.data.model
         
         /** 
          * A formatting string for displaying values of this field.
-         * @see org.juicekit.util.Strings#format
          * 
          * <p>If not specified, use defaults based on type.</p>
+         *
+         * @see org.juicekit.util.Strings
          */
         protected var _format:String;
         
@@ -177,9 +178,10 @@ package org.juicekit.data.model
         
         /** 
          * A formatting string for exporting values of this field.
-         * @see org.juicekit.util.Strings#format
          * 
          * <p>If not specified, use defaults based on type.</p>
+         *
+         * @see org.juicekit.util.Strings
          */
         protected var _detailFormat:String;
         
@@ -540,7 +542,7 @@ package org.juicekit.data.model
                                   expr:*=null,
                                   isMetric:Object=null,
                                   isAdditive:Object=null,
-                                  isDimension:Object=null):void
+                                  isDimension:Object=null)
         {
             this.name = name;
             this.type = type;

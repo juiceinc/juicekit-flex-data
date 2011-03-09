@@ -79,9 +79,16 @@ package org.juicekit.util
                     var t:Number = val is Number ? Number(val)
                     : Date.parse(String(val));
                     return isNaN(t) ? null : new Date(t);
+				case CURRENCY:
+					var s:String = String(val);
+					if (s.charAt(0) == '$')
+						s = s.substr(1);
+					s = s.replace(',', '');
+					return Number(s);
                 case STRING:
                     return String(val);
-                default:    return val;
+                default:    
+					return val;
             }
         }
         
@@ -97,6 +104,8 @@ package org.juicekit.util
         {
             if (!isNaN(Number(s))) return NUMBER;
             if (!isNaN(Date.parse(s))) return DATE;
+			if (s.length > 0 && s.charAt(0) == '$') 
+				return CURRENCY;
             return STRING;
         }
         

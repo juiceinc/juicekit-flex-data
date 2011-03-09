@@ -37,7 +37,20 @@ package org.juicekit {
       assertEquals(2, results.length);
       assertEquals(ObjectUtil.compare([{a: 1, b: "2,\n3", c: 3}, {a: 3, b: "4", c: 5}], results), 0)
     }
-
+	
+	/**
+	 * Test where the rows contain currency values
+	 */
+	public function testDLCCurrency():void {
+		var s:String = 'a|b|c\n$1,111|$2222|$3,333.33\n$1,111|$2,222|$3333.33'
+		var dtc:DelimitedTextConverter = new DelimitedTextConverter('|');
+		
+		var results:Array = dtc.parse(s).nodes.data;
+		var schema:DataSchema = dtc.parse(s).nodes.schema;
+		assertEquals(2, results.length);
+		assertEquals(ObjectUtil.compare([{a: 1111, b: 2222, c: 3333.33}, {a: 1111, b: 2222, c: 3333.33}], results), 0)
+	}
+	
 
     public function testDLCWikipediaExample():void {
       //http://en.wikipedia.org/wiki/Comma-separated_values

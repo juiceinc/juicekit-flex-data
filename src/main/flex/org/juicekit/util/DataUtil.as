@@ -85,6 +85,11 @@ package org.juicekit.util
 						s = s.substr(1);
 					s = s.replace(',', '');
 					return Number(s);
+				case PCT:
+					var s:String = String(val);
+					if (s.charAt(s.length - 1) == '%')
+						s = s.substr(0, s.length-1);
+					return Number(s) / 100;
                 case STRING:
                     return String(val);
                 default:    
@@ -102,10 +107,13 @@ package org.juicekit.util
          */
         public static function type(s:String):int
         {
+			if (s.length == 0) return NUMBER;
             if (!isNaN(Number(s))) return NUMBER;
             if (!isNaN(Date.parse(s))) return DATE;
 			if (s.length > 0 && s.charAt(0) == '$') 
 				return CURRENCY;
+			if (s.length > 0 && s.charAt(s.length - 1) == '%') 
+				return PCT;
             return STRING;
         }
         

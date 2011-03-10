@@ -262,10 +262,21 @@ public class DelimitedTextConverter implements IDataConverter
     for (var i:int = 2; i < lines.length; ++i) {
       tok = splitColumns(lines[i]);
       for (col = 0; col < tok.length; ++col) {
-        if (types[col] == -1) continue;
-        var type:int = DataUtil.type(tok[col]);
-        if (types[col] != type) {
-          types[col] = -1;
+		var existingType:int = types[col];
+        if (existingType == -1) continue;
+        var newType:int = DataUtil.type(tok[col]);
+		
+        if (existingType != newType) {
+		  // If one of the types is CURRENCY or PCT and the other is (NUMBER or INT) keep the original type
+		  if ((existingType == DataUtil.CURRENCY || existingType == DataUtil.PCT) && 
+			  (newType == DataUtil.NUMBER || newType == DataUtil.INT)) {
+			types[col] = existingType;
+		  } else if ((newType == DataUtil.CURRENCY || newType == DataUtil.PCT) && 
+			         (existingType == DataUtil.NUMBER || existingType == DataUtil.INT)) {
+			types[col] = newType;
+		  } else {
+			types[col] = -1;
+		  }
         }
       }
     }

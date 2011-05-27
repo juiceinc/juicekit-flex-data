@@ -86,7 +86,7 @@ package org.juicekit.util
 					s = s.replace(',', '');
 					return Number(s);
 				case PCT:
-					var s:String = String(val);
+					s = String(val);
 					if (s.charAt(s.length - 1) == '%')
 						s = s.substr(0, s.length-1);
 					return Number(s) / 100;

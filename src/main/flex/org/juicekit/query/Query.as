@@ -32,6 +32,8 @@
 
 package org.juicekit.query
 {
+    import flash.utils.getQualifiedClassName;
+    
     import mx.utils.ObjectUtil;
     
     import org.juicekit.data.DeferredProcessingBase;
@@ -302,9 +304,12 @@ package org.juicekit.query
             
             // TODO -- evaluate any sub-queries in WHERE clause
             var results:Array = [];
+			var cn:String = getQualifiedClassName(input);
             var visitor:Function;
             if (input is Array) {
                 visitor = (input as Array).forEach;
+			} else if (cn == '__AS3__.vec::Vector.<Object>') {
+				visitor = input.forEach;
             } else if (input is Function) {
                 visitor = input as Function;
             } else if (Object(input).hasOwnProperty("visit") &&

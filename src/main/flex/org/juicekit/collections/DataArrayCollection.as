@@ -43,16 +43,26 @@ package org.juicekit.collections
         }
         public function set schema(s:DataSchema):void 
         {
-            if (s !== _schema) {
-                //                if (_schema) 
-                //                    _schema.removeEventListener(CollectionEvent.COLLECTION_CHANGE, handleSchemaChange);
-                _schema = s;
-                //                _schema.addEventListener(CollectionEvent.COLLECTION_CHANGE, handleSchemaChange, false, 0, true);
-                for each (var di:DataItem in this.source) {
-                    (di as DataItem).setSchema(_schema);
-                }
-                dispatchEvent(new Event('schemaChanged'));
-            }
+			if (_schema == null && s != null) 
+			{
+				_schema = s;
+				source = this.source;					
+			}
+			else if (_schema != null && s == null)
+			{
+				_schema = null;
+				source = this.source;					
+			}
+			else
+			{
+				if (s !== _schema) {
+					_schema = s;
+					for each (var di:DataItem in this.source) {
+						(di as DataItem).setSchema(_schema);
+					}
+					dispatchEvent(new Event('schemaChanged'));
+				}			
+			}
         }
         
         protected function handleSchemaChange(e:Event):void {
@@ -65,35 +75,50 @@ package org.juicekit.collections
         //
         //---------------------------------------------------
         
+		
         override public function addItemAt(item:Object, index:int):void
         {
-            var d:DataItem;
-            if (item is DataItem) 
-            {
-                d = item as DataItem;
-                d.setSchema(schema);
-            } 
-            else 
-            {
-                d = new DataItem(schema, item);                
-            }
-            super.addItemAt(d, index);            
+			if (schema == null)
+			{
+				super.addItemAt(item, index);            
+			}
+			else 
+			{
+				var d:DataItem;
+				if (item is DataItem) 
+				{
+					d = item as DataItem;
+					d.setSchema(schema);
+				} 
+				else 
+				{
+					d = new DataItem(schema, item);                
+				}
+				super.addItemAt(d, index);            
+			}
         }
 
 
         override public function setItemAt(item:Object, index:int):Object
         {
-            var d:DataItem;
-            if (item is DataItem) 
-            {
-                d = item as DataItem;
-                d.setSchema(schema);
-            } 
-            else 
-            {
-                d = new DataItem(schema, item);                
-            }
-            return super.setItemAt(d, index);
+			if (schema == null)
+			{
+				return super.setItemAt(item, index);
+			}
+			else
+			{
+				var d:DataItem;
+				if (item is DataItem) 
+				{
+					d = item as DataItem;
+					d.setSchema(schema);
+				} 
+				else 
+				{
+					d = new DataItem(schema, item);                
+				}
+				return super.setItemAt(d, index);
+			}
         }
         
         
@@ -117,21 +142,30 @@ package org.juicekit.collections
             }
             return null;
         }
+
         
+		public var inferSchema:Boolean = false;
         
         /**
          * Wrap all objects as DataItems
          */
         override public function set source(s:Array):void
         {
-            if (!schema && s && s.length) {
+            if (inferSchema && !schema && s && s.length) {
                 this.schema = DataUtil.inferSchema(s);
             }
-            var dataItemArray:Array = [];
-            for each (var item:Object in s) {
-                dataItemArray.push(new DataItem(schema, item));
-            }
-            super.source = dataItemArray;
+			if (schema == null)
+			{
+				super.source = s;				
+			}
+			else
+			{
+				var dataItemArray:Array = [];
+				for each (var item:Object in s) {
+					dataItemArray.push(new DataItem(schema, item));
+				}
+				super.source = dataItemArray;
+			}
             dispatchEvent(new CollectionEvent(CollectionEvent.COLLECTION_CHANGE, true, false, CollectionEventKind.RESET));
         }
         

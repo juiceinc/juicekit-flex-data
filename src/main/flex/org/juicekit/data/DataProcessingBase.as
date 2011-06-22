@@ -13,6 +13,7 @@ package org.juicekit.data {
 	import mx.utils.NameUtil;
 	
 	import org.juicekit.collections.DataArrayCollection;
+	import org.juicekit.data.model.DataSchema;
 	
 	import spark.components.Application;
 	
@@ -65,7 +66,6 @@ package org.juicekit.data {
 		 * A unique name for logging
 		 */
 		public var queryName:String = NameUtil.createUniqueName(this);
-		
 		
 		
 		/**
@@ -183,7 +183,7 @@ package org.juicekit.data {
 			return _result;
 		}
 		
-		private var _result:DataArrayCollection = new DataArrayCollection();
+		protected var _result:DataArrayCollection = new DataArrayCollection();
 		
 		
 		/**

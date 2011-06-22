@@ -44,11 +44,13 @@ package org.juicekit.data {
 		 * @return
 		 */
 		override protected function doResult():Array {
-			return query.eval(dataProvider.source);
+			var newResult:Array = query.eval(dataProvider.source);
+			_result.schema = null;
+			return newResult;
 		}
 		
 		/**
-		 * A Flare query to evaluate against the data in
+		 * A query to evaluate against the data in
 		 * <code>dataProvider</code>.
 		 *
 		 * @param q A JuiceKit Query

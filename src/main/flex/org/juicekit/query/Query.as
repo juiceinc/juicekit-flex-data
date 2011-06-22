@@ -577,6 +577,12 @@ package org.juicekit.query
             var schema:DataSchema = new DataSchema();
             for each (var o:Object in _select) {
                 var df:DataField = (o.expression as Expression).dataField.clone();
+				var tempProps:DataField = df;
+				while (!(tempProps.expression is Variable))
+					tempProps = tempProps.expression.dataField;
+				df.format = tempProps.format;
+				df.type = tempProps.type;
+				
                 df.name = o.name;
                 df.expression = new Variable(df.name);
                 df.description = df.description;

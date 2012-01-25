@@ -72,8 +72,9 @@ public class Average extends AggregateExpression
    */
   public override function aggregate(value:Object):void
   {
-    var x:Number = Number(_expr.eval(value));
-    if (!isNaN(x)) {
+	var v:Object = _expr.eval(value);
+    var x:Number = Number(v);
+    if (v != null && !isNaN(x)) {
       _sum += x;
       _count += 1;
     }

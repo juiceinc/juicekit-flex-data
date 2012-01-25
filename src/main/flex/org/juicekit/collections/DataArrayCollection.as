@@ -46,26 +46,31 @@ package org.juicekit.collections
 			if (_schema == null && s != null) 
 			{
 				_schema = s;
+				_schema.addEventListener(CollectionEvent.COLLECTION_CHANGE, handleSchemaChange);
 				source = this.source;					
 			}
 			else if (_schema != null && s == null)
 			{
+				_schema.removeEventListener(CollectionEvent.COLLECTION_CHANGE, handleSchemaChange);
 				_schema = null;
 				source = this.source;					
 			}
 			else
 			{
 				if (s !== _schema) {
+					_schema.removeEventListener(CollectionEvent.COLLECTION_CHANGE, handleSchemaChange);
 					_schema = s;
+					_schema.addEventListener(CollectionEvent.COLLECTION_CHANGE, handleSchemaChange);
 					for each (var di:DataItem in this.source) {
 						(di as DataItem).setSchema(_schema);
 					}
-					dispatchEvent(new Event('schemaChanged'));
 				}			
 			}
+			handleSchemaChange();
         }
         
-        protected function handleSchemaChange(e:Event):void {
+        protected function handleSchemaChange(e:Event=null):void {
+			dispatchEvent(new Event('schemaChanged'));
         }
         
         
@@ -144,7 +149,8 @@ package org.juicekit.collections
         }
 
         
-		public var inferSchema:Boolean = false;
+		public var inferSchema:Boolean = true;
+		private var _didInferSchema:Boolean = false;
         
         /**
          * Wrap all objects as DataItems
@@ -153,6 +159,7 @@ package org.juicekit.collections
         {
             if (inferSchema && !schema && s && s.length) {
                 this.schema = DataUtil.inferSchema(s);
+				_didInferSchema = true;
             }
 			if (schema == null)
 			{

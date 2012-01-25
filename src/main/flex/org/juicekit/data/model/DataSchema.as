@@ -38,14 +38,14 @@ package org.juicekit.data.model
     import mx.collections.ArrayList;
     import mx.collections.IList;
     import mx.controls.dataGridClasses.DataGridColumn;
+    import mx.events.CollectionEvent;
+    import mx.events.PropertyChangeEvent;
+    import mx.events.PropertyChangeEventKind;
     
     import org.juicekit.util.Arrays;
     import org.juicekit.util.DataUtil;
     
-    /*
     import spark.components.gridClasses.GridColumn;
-    */
-    
     
     /**
      * A data schema represents a set of data variables and their associated
@@ -100,7 +100,6 @@ package org.juicekit.data.model
             _rawNameLookup[field.rawField] = field;
             _idLookup[field.id] = field;
             this.addItem(field);
-            dispatchEvent(new Event('collectionChange'));
         }
         
         /**
@@ -201,7 +200,7 @@ package org.juicekit.data.model
             return columns;
         }
         
-        /*
+        
         [Bindable(event="collectionChange")]
         public function get sparkFormattedDataGridColumns():IList {
             var columns:ArrayList = new ArrayList();
@@ -226,7 +225,7 @@ package org.juicekit.data.model
             }
             return columns;
         }
-*/        
+        
         private var _metrics:DataSchema;
         private var _dimensions:DataSchema;
         
@@ -280,6 +279,26 @@ package org.juicekit.data.model
             }
             return _dimensions;
         }
+		
+		
+		public function registerFormatForType(type:int, format:String, detailFormat:String):void 
+		{
+			var haveFieldsOfThisType:Boolean = false
+			DataField.registerFormatForType(type, format, detailFormat);
+			for each (var field:DataField in this) 
+			{
+				if (field.type == type)
+				{
+					haveFieldsOfThisType = true;
+					field.dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE, false, false, PropertyChangeEventKind.UPDATE, 'format'));
+				}
+			}
+			
+			if (haveFieldsOfThisType) {
+				dispatchEvent(new CollectionEvent(CollectionEvent.COLLECTION_CHANGE));
+			}
+		}
+		
         
         //-------------------------------------------
         //

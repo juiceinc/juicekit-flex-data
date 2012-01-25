@@ -160,7 +160,10 @@ package org.juicekit.data.model
         
         public function set format(v:String):void {
             if (v != _format) {
-                var oldValue:* = _format;
+				var oldValue:* = _format;
+				if (v == getDefaultFormat(type))
+					v = null;
+				
                 _format = v;
                 dataFieldChanged('format', oldValue, v);
             }
@@ -437,7 +440,7 @@ package org.juicekit.data.model
         /**
          * Notification that DataField properties have changed.
          */
-        private function dataFieldChanged(prop:String, oldValue:*, newValue:*):void {
+        public function dataFieldChanged(prop:String, oldValue:*, newValue:*):void {
             dispatchEvent(new Event('dataFieldChanged'));
             dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, prop, oldValue, newValue)); 
         }
@@ -462,25 +465,64 @@ package org.juicekit.data.model
         /** Constant indicating a percentage data type. */
         public static const PCT:int = 7;
         
-        //                                                 NUMBER      INT       DATE     STRING  OBJECT  BOOLEAN   CURRENCY      PCT 
-        private static var _defaultValue:Object = '';
-        private static var _defaultValues:Array        = [  0,           0,     null, 'Unknown', {},       false,         0,       0];
-
-        private static var _defaultFormat:String = '';
-        [ArrayElementType("String")]
-        private static var _defaultFormats:Array       = ["#,##0.00",  "#,##0", "M d, Y",        "", "",          "",  "$#,##0",  "0.0%"];
-
-        private static var _defaultDetailFormat:String = '';
-        [ArrayElementType("String")]
-        private static var _defaultDetailFormats:Array = ["#,##0.000", "#,##0", "M d, Y",        "", "",          "",  "$#,##0.00", "0.00%"];
-
-        private static var _defaultTypeName:String = 'Unknown';
-        [ArrayElementType("String")]
-        private static var _typeNames:Array = ["Number", "Integer", "Date", "String", "Object", "Boolean", "Currency", "Percentage"];
+		
+		protected static var _defaultValue:Object = '';
+		
+		protected static var _defaultValues:Array        = [  
+			0,           // number           
+			0,           // int
+			null,        // date
+			'Unknown',   // string
+			{},          // object
+			false,       // boolean
+			0,           // currency
+			0            // pct
+		];
+		
+		protected static var _defaultFormat:String = '';
+		
+		[ArrayElementType("String")]
+		protected static var _defaultFormats:Array       = [
+			"#,##0.00",  
+			"#,##0", 
+			"MMM d, yyyy",        
+			"", 
+			"",          
+			"",  
+			"$#,##0",  
+			"0.0%"
+		];
+		
+		protected static var _defaultDetailFormat:String = '';
+		[ArrayElementType("String")]
+		protected static var _defaultDetailFormats:Array = [
+			"#,##0.000", 
+			"#,##0", 
+			"ddd MMMM d, yyyy",        
+			"", 
+			"",          
+			"",  
+			"$#,##0.00", 
+			"0.00%"
+		];
+		
+		protected static var _defaultTypeName:String = 'Unknown';
+		
+		[ArrayElementType("String")]
+		protected static var _typeNames:Array = [
+			"Number", 
+			"Integer", 
+			"Date", 
+			"String", 
+			"Object", 
+			"Boolean", 
+			"Currency", 
+			"Percentage"
+		];
 
         
         public function getDefaultValue(type:int):Object {
-            if (type >= 0 && type < (_defaultValues.length - 1)) {
+            if (type >= 0 && type < _defaultValues.length) {
                 return _defaultValues[type];
             } else {
                 return _defaultValue;                
@@ -488,7 +530,7 @@ package org.juicekit.data.model
         }
         
         public function getDefaultFormat(type:int):String {
-            if (type >= 0 && type < (_defaultFormats.length - 1)) {
+            if (type >= 0 && type < _defaultFormats.length) {
                 return _defaultFormats[type];
             } else {
                 return _defaultFormat;                
@@ -496,7 +538,7 @@ package org.juicekit.data.model
         }
         
         public function getDefaultDetailFormat(type:int):String {
-            if (type >= 0 && type < (_defaultDetailFormats.length - 1)) {
+            if (type >= 0 && type < _defaultDetailFormats.length) {				
                 return _defaultDetailFormats[type];
             } else {
                 return _defaultDetailFormat;                
@@ -504,13 +546,27 @@ package org.juicekit.data.model
         }
         
         public function get typeName():String {
-            if (type >= 0 && type < (_typeNames.length - 1)) {
+            if (type >= 0 && type < _typeNames.length) {
                 return _typeNames[type];
             } else {
                 return _defaultTypeName;                
             }
         }
-        
+
+		
+		/**
+		 * Register updated default formats for a type
+		 */
+		public static function registerFormatForType(type:int, format:String, detailFormat:String):void 
+		{
+			if (type > 0 && type < _defaultFormats.length) 
+			{
+				if (format != null) _defaultFormats[type] = format;
+				if (detailFormat != null) _defaultDetailFormats[type] = detailFormat;
+			}
+		}
+		
+		
         
         //-------------------------------------------
         //

@@ -32,6 +32,7 @@
 
 package org.juicekit.query
 {
+    import flash.utils.describeType;
     import flash.utils.getQualifiedClassName;
     
     import mx.utils.ObjectUtil;
@@ -363,25 +364,30 @@ package org.juicekit.query
             
             if (toClass) {
                 var Klass:Class = toClass;
-                var klassProperties:Array = [];
+                var klassProperties:Vector.<String> = new Vector.<String>();
                 var prop:String;
                 var hasKlassProperties:Boolean = false;
+				var klassDescription:XML = describeType(Klass);
+				var klassIsDynamic:Boolean = klassDescription..type.@isDynamic;				
                 var klassResults:Array = [];
                 var k:Object;
                 for each (var row:Object in results) {
                     if (!hasKlassProperties) {
                         for (prop in row) {
                             k = new Klass();
-                            if (k.hasOwnProperty(prop)) {
+							// If Klass is dynamic, add all properties and 
+							// assume Klass will be able to handle them.
+                            if (k.hasOwnProperty(prop) || klassIsDynamic) {
                                 klassProperties.push(prop);
                             }                        
                         }
                     }
                     // copy properties over to the new object
                     k = new Klass();
-                    for each (prop in klassProperties) {
-                        k[prop] = row[prop];                        
-                    }
+
+					for each (prop in klassProperties) {
+						k[prop] = row[prop];                        
+					}
                     klassResults.push(k);
                     hasKlassProperties = true;
                 }

@@ -453,6 +453,8 @@ package org.juicekit.query
             var a:*;
             for each (var p:Property in props) {
                 a = p.getValue(x);
+				if (a == null) 
+					a = '__NULL__';
                 propVals.push(a.toString());
             }
             return propVals.join('::');

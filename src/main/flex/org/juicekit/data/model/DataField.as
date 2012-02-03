@@ -36,10 +36,9 @@ package org.juicekit.data.model
     import flash.events.EventDispatcher;
     
     import mx.events.PropertyChangeEvent;
-    import mx.events.PropertyChangeEventKind;
     
     import org.juicekit.query.Expression;
-    import org.juicekit.query.methods.sum;
+    import org.juicekit.query.methods.*;
     import org.juicekit.util.DataUtil;
     import org.juicekit.util.Strings;
     
@@ -310,7 +309,7 @@ package org.juicekit.data.model
         protected var _aggregationExpression:Expression;
         
         public function set aggregationExpression(v:*):void {
-            var oldValue:* = _expression;
+            var oldValue:* = aggregationExpression;
             if (v is Expression) {
                 _aggregationExpression = v;
             } else if (v is String) {
@@ -318,18 +317,74 @@ package org.juicekit.data.model
             } else {
                 _aggregationExpression = null;
             }
-            dataFieldChanged('aggregationExpression', oldValue, _aggregationExpression);
+            dataFieldChanged('aggregationExpression', oldValue, aggregationExpression);
         }
         
         [Bindable(event="dataFieldChanged")]
         public function get aggregationExpression():Expression {
             if (_aggregationExpression == null) {
-                _aggregationExpression = sum(expression);
+                _aggregationExpression = aggregationOperator(expression);
             } 
             _aggregationExpression.dataField = this;
             return _aggregationExpression;
         } 
+		
+		
+		/**
+		 * Register new operators to use for aggregation.
+		 * 
+		 * @param code a string to use to identify the operator
+		 * @param op a unary function 
+		 */
+		public function registerAggregationOperator(code:String, op:Function):void {
+			_aggregationOperatorMap[code] = op;		
+		}
+		
+		
+		/** 
+		 * An operator to calculate the value of this field from a DataItem object
+		 * when the field is aggregated.
+		 * 
+		 * @see DataItem  
+		 **/
+		protected var _aggregationOperator:String = 'sum';
+		protected var _aggregationOperatorMap:Object = {
+			'sum': sum,
+			'average': average,
+			'min': min,
+			'max': max,
+			'count': count			
+		};
+			
+		
+		/**
+		 * Set the aggregation operator as a String. The aggregation operator
+		 * must be registered in the aggregationOperatorMap.
+		 * 
+		 * Operators can include 'sum', 'average', 'min', 'max', 'count' 
+		 */ 
+		public function set aggregationOperator(v:*):void {
+			var oldValue:* = aggregationExpression;
+			_aggregationOperator = v;
+			dataFieldChanged('aggregationExpression', oldValue, aggregationExpression);
+		}
+		
+		[Bindable(event="dataFieldChanged")]
+		public function get aggregationOperator():* {
+			if (_aggregationOperatorMap.hasOwnProperty(_aggregationOperator)) {
+				return _aggregationOperatorMap[_aggregationOperator];
+			} else {
+				return _aggregationOperator['sum'];
+			}
+		} 		
         
+		
+		/**
+		 * Aggregate an expression
+		 */
+		public function aggregate(v:*):* {
+			return (aggregationOperator as Function)(v);
+		}
         
         /** 
          * Is this data field usable as a metric?

@@ -297,7 +297,7 @@ package org.juicekit.query
          * @param toClass an optional Class that results will be cast to
          * @return an array of processed query results
          */
-        public function eval(input:*, toClass:Class=null):Array
+        public function eval(input:*, toClass:Class=null, classCache:Array=null):Array
         {
             // check for initialization
             if (_sort == null) _sort = sorter();
@@ -355,7 +355,6 @@ package org.juicekit.query
             }
             
             
-            
             // ChrisG: Move the sort to the last action
             // sort the result set
             if (_sort != null) {
@@ -371,6 +370,8 @@ package org.juicekit.query
 				var klassIsDynamic:Boolean = klassDescription..type.@isDynamic;				
                 var klassResults:Array = [];
                 var k:Object;
+				var cacheLength:int = (classCache is null) ? 0 : classCache.length;
+				var cnt:int = 0;
                 for each (var row:Object in results) {
                     if (!hasKlassProperties) {
                         for (prop in row) {
@@ -382,13 +383,20 @@ package org.juicekit.query
                             }                        
                         }
                     }
-                    // copy properties over to the new object
-                    k = new Klass();
+					
+                    // copy properties over to the new object					
+					if (cnt < cacheLength) {
+						k = classCache[cnt];
+					}
+					else {
+						k = new Klass();
+					}
 
 					for each (prop in klassProperties) {
 						k[prop] = row[prop];                        
 					}
                     klassResults.push(k);
+					cnt += 1;
                     hasKlassProperties = true;
                 }
                 return klassResults;

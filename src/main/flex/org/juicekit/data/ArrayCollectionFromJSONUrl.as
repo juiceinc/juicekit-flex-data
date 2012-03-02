@@ -16,8 +16,7 @@
 
 package org.juicekit.data {
 	
-	import com.adobe.serialization.json.JSON;
-	import com.adobe.serialization.json.JSONParseError;
+	import com.brokenfunction.json.decodeJson;
 	
 	import mx.core.UIComponent;
 	import mx.logging.*;
@@ -74,8 +73,8 @@ package org.juicekit.data {
 		override protected function doHandleResultString(payload:String):Array {
 			var o:Object;
 			try {
-				o = JSON.decode(payload);
-			} catch(err:JSONParseError) {
+				o = com.brokenfunction.json.decodeJson(payload) as Object;
+			} catch(err:Error) {
 				dispatchEvent(new FaultEvent(FaultEvent.FAULT));
 				return null;
 			}

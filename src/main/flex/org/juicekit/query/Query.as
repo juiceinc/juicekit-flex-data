@@ -370,7 +370,7 @@ package org.juicekit.query
 				var klassIsDynamic:Boolean = klassDescription..type.@isDynamic;				
                 var klassResults:Array = [];
                 var k:Object;
-				var cacheLength:int = (classCache is null) ? 0 : classCache.length;
+				var cacheLength:int = (classCache == null) ? 0 : classCache.length;
 				var cnt:int = 0;
                 for each (var row:Object in results) {
                     if (!hasKlassProperties) {

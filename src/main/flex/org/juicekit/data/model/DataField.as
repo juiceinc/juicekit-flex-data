@@ -113,6 +113,8 @@ package org.juicekit.data.model
         public function set rawField(v:String):void {
             if (v != _rawField) {
                 var oldValue:* = _rawField;
+				_expression = null;
+				_aggregationExpression = null;
                 _rawField = v;
                 dataFieldChanged('rawField', oldValue, v);
             }
@@ -365,6 +367,7 @@ package org.juicekit.data.model
 		 */ 
 		public function set aggregationOperator(v:*):void {
 			var oldValue:* = aggregationExpression;
+			_aggregationExpression = null;
 			_aggregationOperator = v;
 			dataFieldChanged('aggregationExpression', oldValue, aggregationExpression);
 		}
@@ -374,7 +377,7 @@ package org.juicekit.data.model
 			if (_aggregationOperatorMap.hasOwnProperty(_aggregationOperator)) {
 				return _aggregationOperatorMap[_aggregationOperator];
 			} else {
-				return _aggregationOperator['sum'];
+				return _aggregationOperatorMap['sum'];
 			}
 		} 		
         

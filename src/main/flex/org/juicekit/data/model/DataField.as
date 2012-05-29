@@ -355,7 +355,8 @@ package org.juicekit.data.model
 			'average': average,
 			'min': min,
 			'max': max,
-			'count': count			
+			'count': count,
+			'median': median
 		};
 			
 		

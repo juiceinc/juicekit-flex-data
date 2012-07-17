@@ -32,8 +32,6 @@
 
 package org.juicekit.data.converter
 {
-import com.adobe.serialization.json.JSON;
-
 import flash.utils.ByteArray;
 import flash.utils.IDataInput;
 import flash.utils.IDataOutput;
@@ -75,7 +73,7 @@ public class JSONConverter implements IDataConverter
    */
   public function parse(text:String, schema:DataSchema):Array
   {
-    var json:Object = JSON.decode(text) as Object;
+    var json:Object = JSON.parse(text) as Object;
     var list:Array = json as Array;
 
     if (schema != null) {
@@ -100,7 +98,7 @@ public class JSONConverter implements IDataConverter
   {
     var tuples:Array = data.nodes.data;
     if (output == null) output = new ByteArray();
-    output.writeUTFBytes(JSON.encode(tuples));
+    output.writeUTFBytes(JSON.stringify(tuples));
     return output;
   }
 

@@ -69,7 +69,9 @@ public class Minimum extends AggregateExpression
   public override function aggregate(value:Object):void
   {
     value = _expr.eval(value);
-    if (_value == null || value < _value) {
+		// Make sure that value is not null because null evaluates to 
+		// less than any number.
+    if (_value == null || (value != null && value < _value)) {
       _value = value;
     }
   }

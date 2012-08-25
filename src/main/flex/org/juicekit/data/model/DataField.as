@@ -343,7 +343,12 @@ package org.juicekit.data.model
         public function get aggregationExpression():Expression {
             if (_aggregationExpression == null) {
 				if (_aggregationOperator == 'weightedAverage') {
-					_aggregationExpression = aggregationOperator(expression, relatedField.expression);
+					if (relatedField == null) {
+						// Related field must be set to calculate weighted average
+						return null;
+					} else {
+						_aggregationExpression = aggregationOperator(expression, relatedField.expression);
+					}
 				} else {
 					_aggregationExpression = aggregationOperator(expression);
 				}					

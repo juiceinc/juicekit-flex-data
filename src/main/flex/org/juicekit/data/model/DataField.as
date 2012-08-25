@@ -300,8 +300,25 @@ package org.juicekit.data.model
             _expression.dataField = this;
             return _expression;
         } 
+		
+		
+		
+		/** 
+		 * A related field is used to calculate expressions that involve two DataFields.
+		 * 
+		 * See wtdaverage.
+		 **/
+		protected var _relatedField:DataField;
+		
+		public function set relatedField(v:DataField):void {
+			_relatedField = v;
+		}
         
-        
+		public function get relatedField():DataField {
+			return _relatedField;
+		}
+
+		
         /** 
          * An expression to calculate the value of this field from a DataItem object
          * when the field is aggregated
@@ -325,7 +342,11 @@ package org.juicekit.data.model
         [Bindable(event="dataFieldChanged")]
         public function get aggregationExpression():Expression {
             if (_aggregationExpression == null) {
-                _aggregationExpression = aggregationOperator(expression);
+				if (_aggregationOperator == 'weightedAverage') {
+					_aggregationExpression = aggregationOperator(expression, relatedField.expression);
+				} else {
+					_aggregationExpression = aggregationOperator(expression);
+				}					
             } 
             _aggregationExpression.dataField = this;
             return _aggregationExpression;
@@ -356,7 +377,8 @@ package org.juicekit.data.model
 			'min': min,
 			'max': max,
 			'count': count,
-			'median': median
+			'median': median,
+			'weightedAverage': wtdaverage
 		};
 			
 		
@@ -364,9 +386,12 @@ package org.juicekit.data.model
 		 * Set the aggregation operator as a String. The aggregation operator
 		 * must be registered in the aggregationOperatorMap.
 		 * 
-		 * Operators can include 'sum', 'average', 'min', 'max', 'count' 
+		 * Operators can include 'sum', 'average', 'min', 'max', 'count', 'weightedAverage' 
 		 */ 
 		public function set aggregationOperator(v:*):void {
+			if (v == 'weightedAverage' && relatedField == null) {
+				throw new Error('weightedAverage operator requires setting a relatedField to provide the weighting.');	
+			}
 			var oldValue:* = aggregationExpression;
 			_aggregationExpression = null;
 			_aggregationOperator = v;
@@ -381,7 +406,7 @@ package org.juicekit.data.model
 				return _aggregationOperatorMap['sum'];
 			}
 		} 		
-        
+		
 		
 		/**
 		 * Aggregate an expression
@@ -549,7 +574,7 @@ package org.juicekit.data.model
 			"",          
 			"",  
 			"$#,##0",  
-			"0.0%"
+			"0.00%"
 		];
 		
 		protected static var _defaultDetailFormat:String = '';
@@ -562,7 +587,7 @@ package org.juicekit.data.model
 			"",          
 			"",  
 			"$#,##0.00", 
-			"0.00%"
+			"0.000%"
 		];
 		
 		protected static var _defaultTypeName:String = 'Unknown';

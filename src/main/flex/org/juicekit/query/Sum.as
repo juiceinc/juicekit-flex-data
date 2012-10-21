@@ -65,7 +65,7 @@ package org.juicekit.query
          */
         public override function reset():void
         {
-            _sum = 0;
+            _sum = Number.NaN;
         }
         
         /**
@@ -83,6 +83,9 @@ package org.juicekit.query
         {
             var x:Number = Number(_expr.eval(value));
             if (!isNaN(x)) {
+				if (isNaN(_sum)) {
+					_sum = 0;
+				}
                 _sum += x;
             }
         }

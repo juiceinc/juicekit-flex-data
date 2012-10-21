@@ -81,13 +81,15 @@ package org.juicekit.query
          */
         public override function aggregate(value:Object):void
         {
-            var x:Number = Number(_expr.eval(value));
-            if (!isNaN(x)) {
-				if (isNaN(_sum)) {
-					_sum = 0;
-				}
-                _sum += x;
-            }
+			var rawx:Object = _expr.eval(value);
+            var x:Number = Number(rawx);
+			if (isNaN(x) || rawx == null) {
+				return;
+			}
+			if (isNaN(_sum)) {
+				_sum = 0;
+			}
+            _sum += x;
         }
         
     } // end of class Sum

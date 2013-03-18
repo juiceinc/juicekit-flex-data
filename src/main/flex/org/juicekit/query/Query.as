@@ -87,6 +87,7 @@ package org.juicekit.query
         private var _wheres:Array = [];
         private var _sort:Sort;
         private var _aggrs:Array;
+		private var _calculatedLiterals:Array;
         private var _map:Boolean = false;
         private var _update:Boolean = false;
         
@@ -272,20 +273,34 @@ package org.juicekit.query
             return s.length == 0 ? null : new Sort(s);
         }
         
-        
-        protected function aggregates():Array
-        {
-            var aggrs:Array = [];
-            for each (var pair:Object in _select) {
-                var expr:Expression = pair.expression;
-                expr.visit(function(e:Expression):void {
-                    if (e is AggregateExpression)
-                        aggrs.push(e);
-                });
-            }
-            return aggrs.length == 0 ? null : aggrs;
-        }
-        
+		
+		protected function aggregates():Array
+		{
+			var aggrs:Array = [];
+			for each (var pair:Object in _select) {
+				var expr:Expression = pair.expression;
+				expr.visit(function(e:Expression):void {
+					if (e is AggregateExpression)
+						aggrs.push(e);
+				});
+			}
+			return aggrs.length == 0 ? null : aggrs;
+		}
+		
+		
+		protected function deferredLiterals():Array
+		{
+			var lits:Array = [];
+			for each (var pair:Object in _select) {
+				var expr:Expression = pair.expression;
+				expr.visit(function(e:Expression):void {
+					if (e is CalculatedLiteral)
+						lits.push(e);
+				});
+			}
+			return lits.length == 0 ? null : lits;
+		}
+		
         // -- query processing ------------------------------------------------
         
         /**
@@ -301,7 +316,8 @@ package org.juicekit.query
         {
             // check for initialization
             if (_sort == null) _sort = sorter();
-            if (_aggrs == null) _aggrs = aggregates();
+			if (_aggrs == null) _aggrs = aggregates();
+			if (_calculatedLiterals == null) _calculatedLiterals = deferredLiterals();
             
             // TODO -- evaluate any sub-queries in WHERE clause
             var results:Array = [];
@@ -490,7 +506,24 @@ package org.juicekit.query
                     }
                 }
             }
-            
+
+			// Perform a summary query to set the values for calculatedLiterals
+			if (_calculatedLiterals && _calculatedLiterals.length > 0) {
+				var litSelect:Object = {};
+				
+				for (i = _calculatedLiterals.length; --i >= 0;) {
+					var lit:CalculatedLiteral = _calculatedLiterals[i] as CalculatedLiteral;
+					litSelect['v' + i] = lit.expr;
+				}
+				var litResults:Array = new Query([litSelect]).eval(items);
+				if (litResults.length > 0) {
+					var litResult:Object = litResults[0];
+					for (i = _calculatedLiterals.length; --i >= 0;) {
+						lit = _calculatedLiterals[i] as CalculatedLiteral;
+						lit.value = litResult['v' + i];
+					}
+				}				
+			}
             
             // process all groups
             reset(_aggrs);

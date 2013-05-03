@@ -524,7 +524,7 @@ package org.juicekit.query
 					}
 				}				
 			}
-            
+			
             // process all groups
             reset(_aggrs);
             var aggrItem:AggrItem;
@@ -545,7 +545,14 @@ package org.juicekit.query
             }
             
             reset(_aggrs);
-            for (key in lookup) {
+						
+			var sortedKeys:Array = [];
+			for (key in lookup) {
+				sortedKeys.push(key);
+			}
+			sortedKeys.sort();
+			
+            for each (key in sortedKeys) {
                 aggrItem = lookup[key] as AggrItem;
                 for (i = 1,h = 0,item = aggrItem.items[0]; i <= aggrItem.items.length; ++i) {
                     // update the aggregate functions

@@ -383,6 +383,8 @@ package org.juicekit.data.model
 			'max': max,
 			'count': count,
 			'median': median,
+			'pcttotal': pcttotal,
+			'sharechange': sharechange,			
 			'weightedAverage': wtdaverage
 		};
 			
@@ -391,11 +393,12 @@ package org.juicekit.data.model
 		 * Set the aggregation operator as a String. The aggregation operator
 		 * must be registered in the aggregationOperatorMap.
 		 * 
-		 * Operators can include 'sum', 'average', 'min', 'max', 'count', 'weightedAverage' 
+		 * Operators can include 'sum', 'average', 'min', 'max', 'count', 'weightedAverage'
+		 * pcttotal, sharechange 
 		 */ 
 		public function set aggregationOperator(v:*):void {
-			if (v == 'weightedAverage' && relatedField == null) {
-				throw new Error('weightedAverage operator requires setting a relatedField to provide the weighting.');	
+			if ((v == 'weightedAverage' || v == 'sharechange') && relatedField == null) {
+				throw new Error('weightedAverage or sharechange operator requires setting a relatedField.');	
 			}
 			var oldValue:* = aggregationExpression;
 			_aggregationExpression = null;

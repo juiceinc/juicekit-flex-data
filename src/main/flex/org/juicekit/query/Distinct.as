@@ -75,7 +75,9 @@ public class Distinct extends AggregateExpression
   public override function aggregate(value:Object):void
   {
     value = _expr.eval(value);
-    if (_map[value] == undefined) {
+    if (value !== null && 
+		value !== '' &&
+		_map[value] == undefined) {
       _count++;
       _map[value] = 1;
     }

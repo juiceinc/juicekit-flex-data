@@ -385,7 +385,8 @@ package org.juicekit.data.model
 			'median': median,
 			'pcttotal': pcttotal,
 			'sharechange': sharechange,			
-			'weightedAverage': wtdaverage
+			'weightedAverage': wtdaverage,
+			'pctchange': pctchange
 		};
 			
 		

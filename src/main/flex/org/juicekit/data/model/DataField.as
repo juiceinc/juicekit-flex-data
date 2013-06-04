@@ -342,9 +342,12 @@ package org.juicekit.data.model
         [Bindable(event="dataFieldChanged")]
         public function get aggregationExpression():Expression {
             if (_aggregationExpression == null) {
-				if (_aggregationOperator == 'weightedAverage') {
+				if (_aggregationOperator == 'weightedAverage' || 
+				    _aggregationOperator == 'sharechange' ||
+				    _aggregationOperator == 'pctchange') {
 					if (relatedField == null) {
 						// Related field must be set to calculate weighted average
+						// or the other aggregations that require a related field
 						return null;
 					} else {
 						_aggregationExpression = aggregationOperator(expression, relatedField.expression);

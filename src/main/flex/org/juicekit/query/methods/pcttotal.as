@@ -13,7 +13,9 @@ package org.juicekit.query.methods
 	 * @return the new query operator
 	 */
 	public function pcttotal(val:*):Arithmetic
-	{
-		return Arithmetic.Divide(sum(val), grand(val));
+	{		
+		return Arithmetic.DivideZero(sum(val), grand(val));
 	}
+	
+	
 }

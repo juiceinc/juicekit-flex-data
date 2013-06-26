@@ -51,7 +51,9 @@ public class Arithmetic extends BinaryExpression
   public static const DIV:int = 3;
   /** Indicates a modulo operation. */
   public static const MOD:int = 4;
-  
+  /** Indicates a division operation where zero
+  * or error values cause a returned value of 0. */
+  public static const DIVZERO:int = 5;
   
   override public function get dataField():DataField 
   {
@@ -70,8 +72,9 @@ public class Arithmetic extends BinaryExpression
       case ADD: return '+';
       case SUB: return '-';
       case MUL: return '*';
-      case DIV: return '/';
+	  case DIV: return '/';
       case MOD: return '%';
+	  case DIVZERO: return '/';
       default: return '?';
     }
   }
@@ -110,6 +113,12 @@ public class Arithmetic extends BinaryExpression
       case MUL: return x * y;
       case DIV: return x / y;
       case MOD: return x % y;
+	  case DIVZERO:
+		  if (isNaN(y) || y == 0) {
+			  return 0;
+		  } else {
+			  return x / y;
+		  }
     }
     throw new Error("Unknown operation type: " + _op);
   }
@@ -159,9 +168,21 @@ public class Arithmetic extends BinaryExpression
    */
   public static function Divide(left:*, right:*):Arithmetic
   {
-    return new Arithmetic(DIV, left, right);
+	  return new Arithmetic(DIV, left, right);
   }
-
+  
+  /**
+   * Creates a new Arithmetic operator for dividing one number
+   *  by another with special handling for bad right size values.
+   * @param left the left-hand input expression
+   * @param right the right-hand input expression
+   * @return the new Arithmetic operator
+   */
+  public static function DivideZero(left:*, right:*):Arithmetic
+  {
+	  return new Arithmetic(DIVZERO, left, right);
+  }
+  
   /**
    * Creates a new Arithmetic operator for computing the modulo
    *  (remainder) of a number.
